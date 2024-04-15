@@ -16,7 +16,7 @@ const BulkUploadForm = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${BASE_URL}/dns/bulkupload`, formData, {
+      const response = await axios.post(`${BASE_URL}/dns/bulkupload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `${token}`
@@ -24,10 +24,12 @@ const BulkUploadForm = () => {
       });
 
       // Handle successful upload
+      alert(response.data.message)
       console.log('Bulk upload successful');
     } catch (error) {
       // Handle upload error
       console.error('Error uploading file:', error);
+      alert(error.response.data.message);
     }
   };
 

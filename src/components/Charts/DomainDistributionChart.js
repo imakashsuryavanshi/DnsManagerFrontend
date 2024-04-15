@@ -36,12 +36,12 @@ const DomainDistributionChart = () => {
   }, []);
 
   return (
-    <div className="chart-container bg-white rounded-lg shadow-md p-4 w-64">
+    <div className="chart-container bg-white rounded-lg shadow-md p-4 w-70">
       <h2 className="chart-title text-lg font-semibold mb-2">Domain Distribution</h2>
       <div className="h-48">
         <BarChart
-           width={175} // Adjust width dynamically based on data length
-           height={200}
+           width={275} // Adjust width dynamically based on data length
+           height={210}
           data={chartData}
           margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
         >

@@ -35,12 +35,12 @@ const RecordTypeDistributionChart = () => {
   }, []);
 
   return (
-    <div className="chart-container bg-white rounded-lg shadow-md p-4 w-full md:w-64"> {/* Adjust width based on screen size */}
+    <div className="chart-container bg-white rounded-lg shadow-md p-4 w-full md:w-70"> {/* Adjust width based on screen size */}
       <h2 className="chart-title text-lg font-semibold mb-2">Record Type Distribution</h2>
       <div className="h-48" >
         <BarChart
-          width={175} // Adjust width dynamically based on data length
-          height={200}
+          width={275} // Adjust width dynamically based on data length
+          height={210}
           data={chartData}
           margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
         >

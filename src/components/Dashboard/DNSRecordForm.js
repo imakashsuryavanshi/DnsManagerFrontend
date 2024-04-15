@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { PencilIcon, TrashIcon } from "@heroicons/react/outline";
 import { BASE_URL } from "../../helper";
@@ -15,6 +16,8 @@ const DNSManager = () => {
   const [recordIdToEdit, setRecordIdToEdit] = useState(null);
   const [filters, setFilters] = useState({ });
 
+  const navigate = useNavigate();
+
   // Function to retrieve user ID from localStorage
   const getUserId = () => {
     return localStorage.getItem("userId");
@@ -22,7 +25,16 @@ const DNSManager = () => {
 
   // Function to retrieve token from localStorage
   const getToken = () => {
-    return localStorage.getItem("token");
+    const token = localStorage.getItem("token")
+    if(token)
+    {
+      return localStorage.getItem("token");
+    }
+    else{
+      alert("logged out: JWT Token Expired!!")
+      navigate("/login");    
+    }
+      
   };
 
   // Fetch DNS records from the API based on filters and search query
@@ -50,7 +62,7 @@ const DNSManager = () => {
     const fetchfilteredRecords = async () => {
       try {
         const token = getToken();
-        const userId = getUserId(); 
+        const userId = getUserId();
         const response = await axios.get(`${BASE_URL}/dns/filtered`, {
           headers: { Authorization: `${token}` },
           params: {
@@ -90,6 +102,7 @@ const DNSManager = () => {
             headers: { Authorization: `${token}` },
           }
         );
+        alert("record updated successfully!!")
         setRecords(
           records.map((record) =>
             record._id === recordIdToEdit ? formData : record
@@ -106,11 +119,17 @@ const DNSManager = () => {
             headers: { Authorization: `${token}` },
           }
         );
-        setRecords([...records, response.data]);
+        if (response.status == 200){
+          alert("record created successfully!!");
+          setRecords([...records, response.data]);
+        }
       }
       setFormData({ domain: "", type: "A", value: "", ttl: "" });
+      
     } catch (error) {
-      console.error("Error adding/updating DNS record:", error);
+      //console.log(message);
+      console.error("Error adding/updating DNS record:", error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
@@ -124,17 +143,20 @@ const DNSManager = () => {
   const handleDelete = async (id) => {
     try {
       const token = getToken();
-      await axios.delete(`${BASE_URL}/dns/delete/${id}`, 
+      const response =  await axios.delete(`${BASE_URL}/dns/delete/${id}`, 
       {
         headers: { Authorization: `${token}` },
         params: {
           id : id
         }
       }
+      
     );
+    alert(response.data.message);
       setRecords(records.filter((record) => record._id !== id));
     } catch (error) {
-      console.error("Error deleting DNS record:", error);
+      console.error("Error deleting DNS record:", error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
