@@ -3,7 +3,6 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'rec
 import axios from 'axios';
 import { BASE_URL } from '../../helper';
 
-
 const DomainDistributionChart = () => {
   const [chartData, setChartData] = useState([]);
 
@@ -13,20 +12,11 @@ const DomainDistributionChart = () => {
         const token = localStorage.getItem('token');
         const response = await axios.get(`${BASE_URL}/dns/distributed`, {
           headers: { Authorization: `${token}` },
-          params: {
-            parameter : 'domain'
-          }
+          params: { parameter: 'domain' }
         });
-        if(response.success = true)
-        {
-          const distributionData = response.data.distribution;
-          const chartData = distributionData.map(item => ({
-            domain: item._id,
-            count: item.count
-          }));
-          setChartData(chartData);
+        if (response.data.success) {
+          setChartData(response.data.domainDistribution); // Update to use domainDistribution data
         }
-        
       } catch (error) {
         console.error('Error fetching domain distribution:', error);
       }
@@ -40,17 +30,17 @@ const DomainDistributionChart = () => {
       <h2 className="chart-title text-lg font-semibold mb-2">Domain Distribution</h2>
       <div className="h-48">
         <BarChart
-           width={275} // Adjust width dynamically based on data length
-           height={210}
+          width={275}
+          height={210}
           data={chartData}
-          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="domain" />
           <YAxis />
-          <Tooltip formatter={(value, name, props) => [value, props.payload.type]} />
+          <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#82ca9d" /> {/* Change the fill color of the bars */}
+          <Bar dataKey="count" fill="#82ca9d" />
         </BarChart>
       </div>
     </div>

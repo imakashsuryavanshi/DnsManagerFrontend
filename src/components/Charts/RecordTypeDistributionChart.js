@@ -12,19 +12,11 @@ const RecordTypeDistributionChart = () => {
         const token = localStorage.getItem('token');
         const response = await axios.get(`${BASE_URL}/dns/distributed`, {
           headers: { Authorization: `${token}` },
-          params: {
-            parameter : 'type'
-          }
+          params: { parameter: 'type' }
         });
 
-        if(response.success = true)
-        {
-          const distributionData = response.data.distribution;
-          const chartData = distributionData.map(item => ({
-            domain: item._id,
-            count: item.count
-          }));
-          setChartData(chartData);
+        if (response.data.success) {
+          setChartData(response.data.recordTypeDistribution); // Update to use recordTypeDistribution data
         }
       } catch (error) {
         console.error('Error fetching record type distribution:', error);
@@ -35,11 +27,11 @@ const RecordTypeDistributionChart = () => {
   }, []);
 
   return (
-    <div className="chart-container bg-white rounded-lg shadow-md p-4 w-full md:w-70"> {/* Adjust width based on screen size */}
+    <div className="chart-container bg-white rounded-lg shadow-md p-4 w-full md:w-70">
       <h2 className="chart-title text-lg font-semibold mb-2">Record Type Distribution</h2>
-      <div className="h-48" >
+      <div className="h-48">
         <BarChart
-          width={275} // Adjust width dynamically based on data length
+          width={275}
           height={210}
           data={chartData}
           margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
@@ -47,7 +39,7 @@ const RecordTypeDistributionChart = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="type" />
           <YAxis />
-          <Tooltip formatter={(value, name, props) => [value, props.payload.type]} />
+          <Tooltip />
           <Legend />
           <Bar dataKey="count" fill="#8884d8" />
         </BarChart>
